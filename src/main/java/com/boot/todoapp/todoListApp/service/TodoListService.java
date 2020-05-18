@@ -1,6 +1,5 @@
 package com.boot.todoapp.todoListApp.service;
 
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +21,10 @@ public class TodoListService {
 		return  new TodoListDataModel("Hello In JSON");
 	}
 	
+	@GetMapping("/todolist/login")
+	public TodoListDataModel securedLogin() {
+		return  new TodoListDataModel("Login Sucess");
+	}
 	
   
 }

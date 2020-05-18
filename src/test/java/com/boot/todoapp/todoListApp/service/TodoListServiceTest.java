@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -58,6 +59,27 @@ public class TodoListServiceTest {
                // .andExpect(jsonPath("$.*", Matchers.hasSize(2)));
     }
 	
+	@Test
+	public void validateSecuriedSvcWithInvalidCredentials() throws Exception {
+		
+        mockMvc.perform(get("/todolist/login/")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+                
+	}
+	
+	@Test
+	public void validateSecuriedSvcWithValidCredentials() throws Exception {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("admin", "password");
+        mockMvc.perform(get("/todolist/login/")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title", Matchers.is("Login Sucess")));
+                
+	}
 	
 //	protected void checkNamedParam(final String param) throws Exception {
 //		String output = (StringUtils.isNullOrEmpty(param)) ? "World" : param;
