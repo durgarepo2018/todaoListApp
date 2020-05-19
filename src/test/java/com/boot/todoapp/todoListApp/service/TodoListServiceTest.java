@@ -62,24 +62,74 @@ public class TodoListServiceTest {
 	@Test
 	public void validateSecuriedSvcWithInvalidCredentials() throws Exception {
 		
-        mockMvc.perform(get("/todolist/login/")
+        mockMvc.perform(get("/todolist/login")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
                 
 	}
 	
 	@Test
-	public void validateSecuriedSvcWithValidCredentials() throws Exception {
+	public void validateSecuriedSvcWithValidAdminCredentials() throws Exception {
 		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setBasicAuth("admin", "password");
-        mockMvc.perform(get("/todolist/login/")
+        mockMvc.perform(get("/todolist/login")
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", Matchers.is("Login Sucess")));
                 
 	}
+	
+	@Test
+	public void validateSecuriedSvcWithValidUserCredentials() throws Exception {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("user", "password");
+        mockMvc.perform(get("/todolist/login")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title", Matchers.is("Login Sucess")));
+                
+	}
+	
+	
+	@Test
+	public void validateSecuriedVisitorSvcWithInvalidCredentials() throws Exception {
+		
+        mockMvc.perform(get("/todoList/visitorLogin")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+                
+	}
+	
+	@Test
+	public void validateSecuriedVisitorSvcWithValidAdminCredentials() throws Exception {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("admin", "password");
+        mockMvc.perform(get("/todoList/visitorLogin")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title", Matchers.is("Visitor Login Success")));
+                
+	}
+	
+	@Test
+	public void validateSecuriedSvcWithValidVisitorCredentials() throws Exception {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("visitor", "password");
+        mockMvc.perform(get("/todoList/visitorLogin")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title", Matchers.is("Visitor Login Success")));
+                
+	}
+	
 	
 //	protected void checkNamedParam(final String param) throws Exception {
 //		String output = (StringUtils.isNullOrEmpty(param)) ? "World" : param;

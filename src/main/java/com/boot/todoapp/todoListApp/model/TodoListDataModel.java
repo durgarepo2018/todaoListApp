@@ -2,6 +2,7 @@ package com.boot.todoapp.todoListApp.model;
 
 public class TodoListDataModel {
 
+	
 	private String title;
 
 	public TodoListDataModel(String title) {

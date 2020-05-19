@@ -17,7 +17,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.inMemoryAuthentication()
                 .withUser("user").password("{noop}password").roles("USER")
                 .and()
-                .withUser("admin").password("{noop}password").roles("USER", "ADMIN");
+                .withUser("visitor").password("{noop}password").roles("VISITOR")
+                .and()
+                .withUser("admin").password("{noop}password").roles("USER", "VISITOR", "ADMIN")
+                ;
 
     }
 
@@ -30,8 +33,16 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/todolist/**").hasRole("ADMIN")
-               // .antMatchers(HttpMethod.POST, "/books").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/todolist/login").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/todoList/addTask").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/todoList/updateTask").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/todoList/deleteTask").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/todoList/fetchTaskList").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/todoList/readTaskDetails").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/todoList/visitorLogin").hasRole("VISITOR")
+                
+                //.antMatchers(HttpMethod.GET, "/redTodoList/**").hasRole("ADMIN")
+               // .antMatchers(HttpMethod.POST, "/books").hasRole("c")
                // .antMatchers(HttpMethod.PUT, "/books/**").hasRole("ADMIN")
                // .antMatchers(HttpMethod.PATCH, "/books/**").hasRole("ADMIN")
                // .antMatchers(HttpMethod.DELETE, "/books/**").hasRole("ADMIN")
@@ -40,5 +51,5 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable();
     }
 
-
+   
 }
