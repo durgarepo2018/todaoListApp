@@ -37,6 +37,13 @@ public class TaskDetails {
 		this.taskDescription = taskDescription;
 	}
 
+	public TaskDetails(String createdBy, String taskName,
+			String taskDescription) {
+		super();
+		this.createdBy = createdBy;
+		this.taskName = taskName;
+		this.taskDescription = taskDescription;
+	}
     // To Update Task 
 	public TaskDetails(String updateBy,  Date updatedDate, String status,
 			 String taskDescription) {

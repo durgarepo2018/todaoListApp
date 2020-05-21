@@ -1,6 +1,7 @@
 package com.boot.todoapp.todoListApp.service;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -17,6 +18,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.boot.todoapp.todoListApp.model.TaskDetails;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -161,7 +165,7 @@ public class TodoListServiceTest {
 	@Test
 	public void validateSecuriedAddTaskSvcWithInvalidCredentials() throws Exception {
 		
-        mockMvc.perform(get("/todoList/addTask")
+        mockMvc.perform(post("/todoList/addTask")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
                 
@@ -173,7 +177,7 @@ public class TodoListServiceTest {
 		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setBasicAuth("admin222", "password");
-        mockMvc.perform(get("/todoList/addTask")
+        mockMvc.perform(post("/todoList/addTask")
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders))
                 .andExpect(status().isUnauthorized());
@@ -186,11 +190,30 @@ public class TodoListServiceTest {
 		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setBasicAuth("admin", "password");
-        mockMvc.perform(get("/todoList/addTask")
-                .accept(MediaType.APPLICATION_JSON)
-                .headers(httpHeaders))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", Matchers.is("addTask")));
+	
+		TaskDetails user = new TaskDetails("Test Script", "TestTask1", " Junit Testing Task");
+	
+        mockMvc.perform(post("/todoList/addTask")
+               .accept(MediaType.APPLICATION_JSON)
+               .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(user))
+               .headers(httpHeaders))
+               .andExpect(status().isCreated());
+                
+	}
+	
+	@Test
+	public void validateAddTaskSvcWithBadInput() throws Exception {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("admin", "password");
+	
+		//TaskDetails user = new TaskDetails("Test Script", "TestTask1", " Junit Testing Task");
+	
+        mockMvc.perform(post("/todoList/addTask")
+               .accept(MediaType.APPLICATION_JSON)
+               .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString("Just a String "))
+               .headers(httpHeaders))
+               .andExpect(status().isBadRequest());
                 
 	}
 	
@@ -199,7 +222,7 @@ public class TodoListServiceTest {
 		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setBasicAuth("visitor", "password");
-        mockMvc.perform(get("/todoList/addTask")
+        mockMvc.perform(post("/todoList/addTask")
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders))
                 .andExpect(status().isForbidden());
@@ -208,17 +231,22 @@ public class TodoListServiceTest {
 	}
 	
 	
-
+	 private final ObjectMapper mapper = new ObjectMapper();
+	 
 	@Test
 	public void validateSecuriedAddTaskSvcWithValidUserCredentials() throws Exception {
 		
+		 TaskDetails user = new TaskDetails("Test Script", "TestTask1", " Junit Testing Task");
+
+		 
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setBasicAuth("user", "password");
-        mockMvc.perform(get("/todoList/addTask")
+        mockMvc.perform(post("/todoList/addTask")
                 .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(user))
                 .headers(httpHeaders))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", Matchers.is("addTask")));
+                .andExpect(status().isCreated());
+              //  .andExpect(jsonPath("$.title", Matchers.is("addTask")));
                 
 	}
 	
