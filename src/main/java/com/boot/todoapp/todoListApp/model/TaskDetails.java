@@ -111,6 +111,14 @@ public class TaskDetails {
 		this.taskDescription = taskDescription;
 	}
 
+
+	@Override
+	public String toString() {
+		return "TaskDetails [taskId=" + taskId + ", createdBy=" + createdBy + ", taskName=" + taskName
+				+ ", createdDate=" + createdDate + ", updatedDate=" + updatedDate + ", status=" + status + ", updateBy="
+				+ updateBy + ", taskDescription=" + taskDescription + "]";
+	}
+
 	
 	
 	

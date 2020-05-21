@@ -346,7 +346,41 @@ public class TodoListServiceTest {
                 
 	}
 	
+	@Test
+	public void testUpdateTaskWithInValidStatus() throws Exception {
+		
+		// No Status Value 
+		 TaskDetails user = new TaskDetails("Durga","CLOSEDDSDS", "May 21th Home Work- Updated", " May 21th  Home Work Updated ");
 
+		 
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("user", "password");
+        mockMvc.perform(put("/todoList/updateTask/1")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(user))
+                .headers(httpHeaders))
+                .andExpect(status().isBadRequest());
+               // .andExpect(jsonPath("$.title", Matchers.is("updateTask")));
+                
+	}
+	
+	@Test
+	public void testUpdateTaskWithValidStatus() throws Exception {
+		
+		// No Status Value 
+		 TaskDetails user = new TaskDetails("Durga", "May 21th Home Work- Updated 111", "PENDING", "111 May 21th  Home Work Updated ");
+
+		 
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("user", "password");
+        mockMvc.perform(put("/todoList/updateTask/2")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(user))
+                .headers(httpHeaders))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title", Matchers.is("Task Details Updated Successfully.")));
+                
+	}
 	@Test
 	public void validateSecuriedDeleteTaskSvcWithInvalidCredentials() throws Exception {
 		

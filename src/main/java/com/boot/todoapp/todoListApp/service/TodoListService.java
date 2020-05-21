@@ -74,28 +74,46 @@ public class TodoListService {
 	public TodoListDataModel updateTask(@PathVariable int taskId, @RequestBody TaskDetails taskDetails) {
 		
 		Optional<TaskDetails> taskToBeUpdated = taskDetailsReposetry.findById(taskId) ;
-		//System.out.println("----------- Task to be updated "+ taskToBeUpdated.isPresent());
+		System.out.println("----------- Task to be updated "+ taskToBeUpdated.isPresent());
 		if(!taskToBeUpdated.isPresent()) {
 			throw new TaskNotFoundException(" Task Details Not found with Task ID : "+ taskId);
 		} else {
 			//if(taskDetails.getStatus() != null ) {
-			
+				boolean isValidStatus = false;
+				
 				for (TaskStatus taskStatus : TaskStatus.values()) { 
-					if(!taskStatus.toString().equalsIgnoreCase(taskDetails.getStatus() )) {
-						StringBuffer statusValue = new StringBuffer("");
-						for (TaskStatus validStatus : TaskStatus.values()) { 
-							statusValue.append(validStatus.toString() + ":");
-						}
-						throw new InvalidInputException(" Invalid Status Value, Valid Status values are  : "+ statusValue.toString());
+					
+					if(taskStatus.toString().equalsIgnoreCase(taskDetails.getStatus() )) {
+						isValidStatus = true;
+						break;	
 					} 
 				}
+				System.out.println(" ------ taskDetails.getStatus()  "+taskDetails +"----isValidStatus-------"+ isValidStatus);
+				if(isValidStatus) {
+					
+					TaskDetails taskDetailsToBeUpdated = taskToBeUpdated.get();
+
+					taskDetailsToBeUpdated.setUpdatedDate(new Date());
+					taskDetailsToBeUpdated.setUpdateBy(taskDetails.getUpdateBy());
+					taskDetailsToBeUpdated.setStatus(taskDetails.getStatus());
+					taskDetailsToBeUpdated.setTaskDescription(taskDetails.getTaskDescription());
+					taskDetailsToBeUpdated.setTaskName(taskDetails.getTaskName());
+					TaskDetails updatedTaskDetails = taskDetailsReposetry.save(taskDetailsToBeUpdated);// service.saveUser(user);
+					
+					
+				} else {
+					StringBuffer statusValue = new StringBuffer("");
+					for (TaskStatus validStatus : TaskStatus.values()) { 
+						statusValue.append(validStatus.toString() + ":");
+					}
+					throw new InvalidInputException(" Invalid Status Value, Valid Status values are  : "+ statusValue.toString());
+				}
 				
-				taskDetails.setUpdatedDate(new Date());
-				TaskDetails updatedTaskDetails = taskDetailsReposetry.save(taskDetails);// service.saveUser(user);
+
 			//}
 		}
 		
-		return  new TodoListDataModel("updateTask");
+		return  new TodoListDataModel("Task Details Updated Successfully.");
 	}
 	
 	@GetMapping("/todoList/deleteTask")
