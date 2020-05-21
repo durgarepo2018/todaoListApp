@@ -37,7 +37,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/todolist/login").hasRole("USER")
                 .antMatchers(HttpMethod.POST, "/todoList/addTask").hasRole("USER")
-                .antMatchers(HttpMethod.GET, "/todoList/updateTask").hasRole("USER")
+                .antMatchers(HttpMethod.PUT, "/todoList/updateTask/{taskId}").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/todoList/deleteTask").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/todoList/fetchTaskList").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/todoList/readTaskDetails").hasRole("USER")

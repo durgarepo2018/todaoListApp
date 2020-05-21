@@ -2,6 +2,7 @@ package com.boot.todoapp.todoListApp.service;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -252,21 +253,30 @@ public class TodoListServiceTest {
 	
 	
 	@Test
-	public void validateSecuriedUpdateTaskSvcWithInvalidCredentials() throws Exception {
+	public void validateSecuriedUpdateTaskSvcWithInvalidURL() throws Exception {
 		
         mockMvc.perform(get("/todoList/updateTask")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+                
+	}
+	
+
+	@Test
+	public void validateSecuriedUpdateTaskSvcWithInvalidCredentials() throws Exception {
+		
+        mockMvc.perform(put("/todoList/updateTask/1")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
                 
 	}
-	
 	
 	@Test
 	public void validateSecuriedUpdateTaskSvcWithInValidAdminCredentials() throws Exception {
 		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setBasicAuth("admin222", "password");
-        mockMvc.perform(get("/todoList/updateTask")
+        mockMvc.perform(put("/todoList/updateTask")
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders))
                 .andExpect(status().isUnauthorized());
@@ -277,13 +287,17 @@ public class TodoListServiceTest {
 	@Test
 	public void validateSecuriedUpdateTaskSvcWithValidAdminCredentials() throws Exception {
 		
+		TaskDetails taskDetails = new TaskDetails("Test Script", "TestTask1", " Junit Testing Task");
+
+		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setBasicAuth("admin", "password");
-        mockMvc.perform(get("/todoList/updateTask")
+        mockMvc.perform(put("/todoList/updateTask/2")
                 .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(taskDetails))
                 .headers(httpHeaders))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", Matchers.is("updateTask")));
+                .andExpect(status().isBadRequest());
+              //  .andExpect(jsonPath("$.title", Matchers.is("updateTask")));
                 
 	}
 	
@@ -292,7 +306,7 @@ public class TodoListServiceTest {
 		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setBasicAuth("visitor", "password");
-        mockMvc.perform(get("/todoList/updateTask")
+        mockMvc.perform(put("/todoList/updateTask/3")
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders))
                 .andExpect(status().isForbidden());
@@ -300,18 +314,35 @@ public class TodoListServiceTest {
                 
 	}
 	
-	
 
 	@Test
-	public void validateSecuriedUpdateTaskSvcWithValidUserCredentials() throws Exception {
+	public void validateSecuriedUpdateTaskSvcWithValidUserAndBadReqData() throws Exception {
 		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setBasicAuth("user", "password");
-        mockMvc.perform(get("/todoList/updateTask")
+        mockMvc.perform(put("/todoList/updateTask/1")
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", Matchers.is("updateTask")));
+                .andExpect(status().isBadRequest());
+               // .andExpect(jsonPath("$.title", Matchers.is("updateTask")));
+                
+	}
+
+	@Test
+	public void validateUpdateTaskSvcWithInValidRquestData() throws Exception {
+		
+		// No Status Value 
+		 TaskDetails user = new TaskDetails("Durga", "May 21th Home Work- Updated", " May 21th  Home Work Updated ");
+
+		 
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("user", "password");
+        mockMvc.perform(put("/todoList/updateTask/1")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(user))
+                .headers(httpHeaders))
+                .andExpect(status().isBadRequest());
+               // .andExpect(jsonPath("$.title", Matchers.is("updateTask")));
                 
 	}
 	
@@ -412,8 +443,8 @@ public class TodoListServiceTest {
         mockMvc.perform(get("/todoList/fetchTaskList")
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", Matchers.is("fetchTaskListByItsStatus")));
+                .andExpect(status().isOk());
+                //.andExpect(jsonPath("$.title", Matchers.is("fetchTaskListByItsStatus")));
                 
 	}
 	
@@ -440,8 +471,8 @@ public class TodoListServiceTest {
         mockMvc.perform(get("/todoList/fetchTaskList")
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", Matchers.is("fetchTaskListByItsStatus")));
+                .andExpect(status().isOk());
+               // .andExpect(jsonPath("$.title", Matchers.is("fetchTaskListByItsStatus")));
                 
 	}
 	

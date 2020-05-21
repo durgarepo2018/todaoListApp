@@ -20,6 +20,7 @@ public class TaskDetails {
 	private String status;
 	private String updateBy;
 	private String taskDescription;
+
 	
 	public TaskDetails() {
 		
@@ -45,12 +46,12 @@ public class TaskDetails {
 		this.taskDescription = taskDescription;
 	}
     // To Update Task 
-	public TaskDetails(String updateBy,  Date updatedDate, String status,
+	public TaskDetails(String updateBy, String taskName, String status,
 			 String taskDescription) {
 		super();
 		this.updateBy = updateBy;
-		this.updatedDate = updatedDate;
 		this.status = status;
+		this.taskName = taskName;
 		this.taskDescription = taskDescription;
 	}
 
