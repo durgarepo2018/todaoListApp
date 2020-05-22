@@ -447,6 +447,130 @@ public class TodoListServiceTest {
 	
 	
 	@Test
+	public void validateFetchTaskByStatus() throws Exception {
+		
+        mockMvc.perform(get("/todoList/findTaskBystatus/open")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+                
+	}
+	
+	
+	@Test
+	public void validateFetchTaskByStatusInValidCredentials() throws Exception {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("admin222", "password");
+        mockMvc.perform(get("/todoList/findTaskBystatus/HOLD")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders))
+                .andExpect(status().isUnauthorized());
+               // .andExpect(jsonPath("$.title", Matchers.is("Visitor Login Success")));
+                
+	}
+	
+	@Test
+	public void validateFetchTaskByStatusWithValidAdminCredentials() throws Exception {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("admin", "password");
+        mockMvc.perform(get("/todoList/findTaskBystatus/CLOSED")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders))
+                .andExpect(status().isOk());
+                //.andExpect(jsonPath("$.title", Matchers.is("fetchTaskListByItsStatus")));
+                
+	}
+	
+	@Test
+	public void validateSecuriedFetchTaskByStatusSvcWithValidVisitorCredentials() throws Exception {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("visitor", "password");
+        mockMvc.perform(get("/todoList/findTaskBystatus/CLOSED")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders))
+                .andExpect(status().isForbidden());
+               // .andExpect(jsonPath("$.title", Matchers.is("Visitor Login Success")));
+                
+	}
+	
+	
+
+	@Test
+	public void validateFetchTaskByStatusWithValidUserCredentials() throws Exception {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("user", "password");
+        mockMvc.perform(get("/todoList/findTaskBystatus/HOLD")
+                .headers(httpHeaders))
+                .andExpect(status().isOk());
+               // .andExpect(jsonPath("$.title", Matchers.is("fetchTaskListByItsStatus")));
+                
+	}
+	
+
+	@Test
+	public void validateFetchTaskByInvalidStatus() throws Exception {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("user", "password");
+        mockMvc.perform(get("/todoList/findTaskBystatus/HOLD3232")
+                .headers(httpHeaders))
+                .andExpect(status().isBadRequest());
+               // .andExpect(jsonPath("$.title", Matchers.is("fetchTaskListByItsStatus")));
+                
+	}
+	
+	@Test
+	public void validateFetchTaskByOPENStatus() throws Exception {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("user", "password");
+        mockMvc.perform(get("/todoList/findTaskBystatus/OPEN")
+                .headers(httpHeaders))
+                .andExpect(status().isOk());
+               // .andExpect(jsonPath("$.title", Matchers.is("fetchTaskListByItsStatus")));
+                
+	}
+	
+	@Test
+	public void validateFetchTaskByHOLDStatus() throws Exception {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("user", "password");
+        mockMvc.perform(get("/todoList/findTaskBystatus/hold")
+                .headers(httpHeaders))
+                .andExpect(status().isOk());
+               // .andExpect(jsonPath("$.title", Matchers.is("fetchTaskListByItsStatus")));
+                
+	}
+	
+	@Test
+	public void validateFetchTaskByDELETEStatus() throws Exception {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("user", "password");
+        mockMvc.perform(get("/todoList/findTaskBystatus/DeleTe")
+                .headers(httpHeaders))
+                .andExpect(status().isBadRequest());
+               // .andExpect(jsonPath("$.title", Matchers.is("fetchTaskListByItsStatus")));
+                
+	}
+	
+	@Test
+	public void validateFetchTaskByPendingStatus() throws Exception {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("user", "password");
+        mockMvc.perform(get("/todoList/findTaskBystatus/PENDING")
+                .headers(httpHeaders))
+                .andExpect(status().isOk());
+               // .andExpect(jsonPath("$.title", Matchers.is("fetchTaskListByItsStatus")));
+                
+	}
+	
+	@Test
 	public void validateSecuriedFetchTaskListSvcWithInvalidCredentials() throws Exception {
 		
         mockMvc.perform(get("/todoList/fetchTaskList")
@@ -509,8 +633,75 @@ public class TodoListServiceTest {
                // .andExpect(jsonPath("$.title", Matchers.is("fetchTaskListByItsStatus")));
                 
 	}
+
 	
 	
+	@Test
+	public void validatefindTaskByUpdateBy() throws Exception {
+		
+        mockMvc.perform(get("/todoList/findTaskByUpdateBy/durga")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+                
+	}
+	
+	
+	@Test
+	public void validatefindTaskByUpdateByInValidUrl() throws Exception {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("admin222", "password");
+        mockMvc.perform(get("/todoList/findTaskByUpdateBy")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders))
+                .andExpect(status().isUnauthorized());
+               // .andExpect(jsonPath("$.title", Matchers.is("Visitor Login Success")));
+                
+	}
+	@Test
+	public void validatefindTaskByUpdateByInValidCredentials() throws Exception {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("admin222", "password");
+        mockMvc.perform(get("/todoList/findTaskByUpdateBy/xxx")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders))
+                .andExpect(status().isUnauthorized());
+               // .andExpect(jsonPath("$.title", Matchers.is("Visitor Login Success")));
+                
+	}
+	@Test
+	public void validatefindTaskByUpdateByWithValidAdminCredentials() throws Exception {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("admin", "password");
+        mockMvc.perform(get("/todoList/findTaskByUpdateBy/durga")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders))
+                .andExpect(status().isOk());
+                //.andExpect(jsonPath("$.title", Matchers.is("fetchTaskListByItsStatus")));
+                
+	}
+
+	
+	
+	@Test
+	public void validatefindTaskByUpdateBySvcWithValidVisitorCredentials() throws Exception {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("visitor", "password");
+        mockMvc.perform(get("/todoList/findTaskByUpdateBy/SOMEUSER")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders))
+                .andExpect(status().isForbidden());
+               // .andExpect(jsonPath("$.title", Matchers.is("Visitor Login Success")));
+                
+	}
+	
+	
+
+
+
 	
 
 	@Test

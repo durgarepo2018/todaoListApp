@@ -122,9 +122,66 @@ public class TodoListService {
 	}
 	
 	@GetMapping("/todoList/fetchTaskList")
-	public List<TaskDetails> fetchTaskListByItsStatus() {
+	public List<TaskDetails> fetchTaskList() {
+		
 		
 		return taskDetailsReposetry.findAll();
+	}
+	
+	@GetMapping("/todoList/findTaskBystatus/{status}")
+	public List<TaskDetails> fetchTaskListByItsStatus(@PathVariable String status) {
+		System.out.println(" -----status---------------- "+ status);
+		
+		boolean isValidStatus = false;
+		
+		if( status != null) {
+			for (TaskStatus taskStatus : TaskStatus.values()) { 
+				
+				if(taskStatus.toString().equalsIgnoreCase(status)) {
+					isValidStatus = true;
+					break;	
+				} 
+			}
+		}
+		
+		if(isValidStatus) {
+			Optional<List<TaskDetails>>  taskListOption = 
+					taskDetailsReposetry.findByTaskStatus(status.toUpperCase());
+			System.out.println(" -----taskListOption---------------- "+ taskListOption);
+			if(taskListOption.isPresent()) {
+				System.out.println(" -----taskListOption.get()---------------- "+ taskListOption.get());
+				return taskListOption.get();
+			}  else {
+				return null;
+			}
+		} else {
+			StringBuffer statusValue = new StringBuffer("");
+			for (TaskStatus validStatus : TaskStatus.values()) { 
+				statusValue.append(validStatus.toString() + ":");
+			}
+			throw new InvalidInputException(" Invalid Status Value, Valid Status values are  : "+ statusValue.toString());
+		}
+		
+		
+		//return null;
+	}
+	
+	
+	@GetMapping("/todoList/findTaskByUpdateBy/{updteBy}")
+	public List<TaskDetails> fetchTaskListUpdateBy(@PathVariable String updteBy) {
+		System.out.println(" -----updteBy---------------- "+ updteBy);
+		
+		Optional<List<TaskDetails>>  taskListOption = 
+				taskDetailsReposetry.findByUpdatedBy(updteBy);
+		System.out.println(" -----taskListOption---------------- "+ taskListOption);
+		if(taskListOption.isPresent()) {
+			System.out.println(" -----taskListOption.get()---------------- "+ taskListOption.get());
+			return taskListOption.get();
+		}  else {
+			return null;
+		}
+		
+		//return null;
 	}
 	
 	@GetMapping("/todoList/readTaskDetails")

@@ -40,6 +40,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/todoList/updateTask/{taskId}").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/todoList/deleteTask").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/todoList/fetchTaskList").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/todoList/findTaskBystatus/{status}").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/todoList/findTaskByUpdateBy/{updteBy}").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/todoList/readTaskDetails").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/todoList/visitorLogin").hasRole("VISITOR")
                 
