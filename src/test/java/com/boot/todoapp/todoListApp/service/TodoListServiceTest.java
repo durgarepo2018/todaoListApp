@@ -2,6 +2,7 @@ package com.boot.todoapp.todoListApp.service;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -292,7 +293,7 @@ public class TodoListServiceTest {
 		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setBasicAuth("admin", "password");
-        mockMvc.perform(put("/todoList/updateTask/2")
+        mockMvc.perform(put("/todoList/updateTask/1")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(taskDetails))
                 .headers(httpHeaders))
@@ -373,7 +374,7 @@ public class TodoListServiceTest {
 		 
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setBasicAuth("user", "password");
-        mockMvc.perform(put("/todoList/updateTask/2")
+        mockMvc.perform(put("/todoList/updateTask/1")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(user))
                 .headers(httpHeaders))
@@ -384,7 +385,10 @@ public class TodoListServiceTest {
 	@Test
 	public void validateSecuriedDeleteTaskSvcWithInvalidCredentials() throws Exception {
 		
-        mockMvc.perform(get("/todoList/deleteTask")
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("user4343", "password434");
+        mockMvc.perform(delete("/todoList/deleteTask/1")
+        		 .headers(httpHeaders)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
                 
@@ -409,11 +413,11 @@ public class TodoListServiceTest {
 		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setBasicAuth("admin", "password");
-        mockMvc.perform(get("/todoList/deleteTask")
+        mockMvc.perform(delete("/todoList/deleteTask/2")
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", Matchers.is("deleteTask")));
+                .andExpect(status().isOk());
+               // .andExpect(jsonPath("$.title", Matchers.is("deleteTask")));
                 
 	}
 	
@@ -425,23 +429,34 @@ public class TodoListServiceTest {
         mockMvc.perform(get("/todoList/deleteTask")
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isNotFound());
                // .andExpect(jsonPath("$.title", Matchers.is("Visitor Login Success")));
                 
 	}
 	
-	
+	@Test
+	public void validateDeleteTaskSvcWithValidVisitorCredentials() throws Exception {
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBasicAuth("user21212", "password");
+        mockMvc.perform(delete("/todoList/deleteTask/1")
+                .accept(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders))
+                .andExpect(status().isUnauthorized());
+               // .andExpect(jsonPath("$.title", Matchers.is("Visitor Login Success")));
+                
+	}
 
 	@Test
 	public void validateSecuriedDeleteTaskSvcWithValidUserCredentials() throws Exception {
 		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setBasicAuth("user", "password");
-        mockMvc.perform(get("/todoList/deleteTask")
+        mockMvc.perform(delete("/todoList/deleteTask/1")
                 .accept(MediaType.APPLICATION_JSON)
                 .headers(httpHeaders))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", Matchers.is("deleteTask")));
+                .andExpect(status().isOk());
+               // .andExpect(jsonPath("$.title", Matchers.is("deleteTask")));
                 
 	}
 	

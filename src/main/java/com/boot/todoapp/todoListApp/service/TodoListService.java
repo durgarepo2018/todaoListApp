@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -116,9 +117,11 @@ public class TodoListService {
 		return  new TodoListDataModel("Task Details Updated Successfully.");
 	}
 	
-	@GetMapping("/todoList/deleteTask")
-	public TodoListDataModel deleteTask() {
-		return  new TodoListDataModel("deleteTask");
+	@DeleteMapping("/todoList/deleteTask/{taskId}")
+	public void deleteTask(@PathVariable int taskId) {
+		
+		taskDetailsReposetry.deleteById(taskId);
+		
 	}
 	
 	@GetMapping("/todoList/fetchTaskList")
