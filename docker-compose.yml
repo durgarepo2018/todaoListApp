@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+      
+  
+
+  my-spring-app:
+    image: spring-boot-mysql-app
+    container_name: user-springboot-mysql-app
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    restart: always
+    # Links wihh the Service Name:Its actual image name" 
+    links:
+     - "mysqlDatabase:mysql/mysql-server"  
+
+  todoList-app:
+    image: todolistapp:latest
+    container_name: todolist-app-mysql-app
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "9002:9002"
+    restart: always
+    # Links wihh the Service Name:Its actual image name" 
+    links:
+     - "mysqlDatabase:mysql/mysql-server"  
+
+
+  mysqlDatabase:
+    image: mysql/mysql-server:latest
+    container_name: my-mysqldb-container
+    environment:
+      MYSQL_DATABASE: 'MY_FIRST_DB'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'sa'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'password'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'password'
+
+
