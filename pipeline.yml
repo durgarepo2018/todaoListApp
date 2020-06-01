@@ -1,0 +1,31 @@
+---
+  resources:
+    - name: TodoApp-SpringBoot
+      type: git
+      source:
+        uri: https://github.com/durgarepo2018/todaoListApp.git
+        branch: master
+      check_every: 1m
+  
+  jobs:
+    - name: job-build-todoApp
+      plan:
+        - get: TodoApp-SpringBoot
+          trigger: true
+        - task: build-todoApp
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source: {repository: openjdk, tag: 8-jdk}
+              source: {repository: maven, tag: 3.3-jdk-8}
+            inputs: 
+              - name: TodoApp-SpringBoot
+            outputs:
+              - name: target
+            run:
+              path: sh
+              dir: TodoApp-SpringBoot
+              args: 
+                 - -exc
+                 - mvn install -DskipTests 

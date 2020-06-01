@@ -1,0 +1,21 @@
+---
+resources:
+  - name: todoAppRepo
+    type: git
+    source:
+      uri: https://github.com/durgarepo2018/todaoListApp.git
+      branch: master
+    check_every: 1m
+
+
+jobs:
+  - name: todo-service
+    serial: true
+    public: true
+    plan:
+      - get: todoAppRepo
+        trigger: true
+      - task: deploy-image
+        file: /Users/e3j7qfx/Codebase/Personal/GIT_PROJECT_SPACE/todaoListApp/ci/deploy-image.yml
+  
+
